@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    on-failure: ABORT
+    runtime-versions:
+        nodejs: latest
+    commands:
+        - echo Installing source NPM dependencies...
+        - npm install --legacy-peer-deps
+        - npm install -g @angular/cli --legacy-peer-deps
+        - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        - sudo apt-get update && sudo apt-get install packer
+  build:
+    on-failure: ABORT
+    commands:
+        - echo Build started 
+        - ng build
+        - packer build -machine-readable ./packer-ui.json
+  post_build:
+    commands:
+        - aws codepipeline start-pipeline-execution --name poc
+artifacts:
+    files:
+        - '**/*'
+    base-directory: 'dist*'
+    discard-paths: yes
