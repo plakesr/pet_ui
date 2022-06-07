@@ -16,7 +16,7 @@ phases:
     on-failure: ABORT
     commands:
         - echo Build started 
-        - ng build
+        - npm run build
         - packer build -machine-readable ./packer-ui.json
   post_build:
     commands:
