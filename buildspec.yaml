@@ -20,7 +20,7 @@ phases:
         - packer build -machine-readable ./packer-ui.json
   post_build:
     commands:
-        - aws codepipeline start-pipeline-execution --name pet_infra
+        - aws codepipeline start-pipeline-execution --name pet-infra
 artifacts:
     files:
         - '**/*'
